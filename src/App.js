@@ -49,34 +49,34 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function App() {
+function App() { //здесь мы используем хуки, так как нет возможности работать с классом
     const classes = useStyles();
-    const [name,setName] = useState('');
-    const [fullName,setFullName] = useState('');
-    const [sex, setSex] = useState('');
-    const [genderText,setText] = useState('Неопределён');
-    const [card, setCard] = useState(true);
-    const updateName = e => {
+    const [name,setName] = useState(''); //хук состояния, фиксирующий текущую введенную строку
+    const [fullName,setFullName] = useState(''); //хук состояния, фиксирующий то что должно быть отправлено в итоге
+    const [sex, setSex] = useState(''); //хук состояния, фиксирующий полученный гендер имени
+    const [genderText,setText] = useState('Неопределён'); //хук состояния, определяющий надпись на карточке
+    const [card, setCard] = useState(true); //хук состояния, отвечающий за появление карточки
+    const updateName = e => { //фиксация введенной строки
         setName(e.target.value);
     }
-    const getName = e =>{
+    const getName = e =>{ //фиксация итоговой строки
         e.preventDefault();
         setFullName(name);
         setCard(false);
     }
-    useEffect(()=>{
-        getInput();
+    useEffect(()=>{ //хук эффекта, срабатывающий при фиксации итоговой строки
+        getInput(); //вызов функции для обращения к  api
         }, [fullName, sex]);
-    const getGender = gender =>{
+    const getGender = gender =>{ //установка гендера
         setSex(gender);
     }
-    const getInput = async () => {
+    const getInput = async () => { //обращение к api
         const response = await fetch(
-            'https://api.genderize.io?name='+fullName
+            'https://api.genderize.io?name='+fullName //обращение к адресу с именем
         );
-        const data = await response.json();
-        getGender(data.gender);
-        if (sex=='male')
+        const data = await response.json(); //перевод в json формат
+        getGender(data.gender); //обращение к полю gender
+        if (sex=='male') //определение пола и установка надписи на карточке
             setText('Мужчина')
         if (sex=='female')
             setText('Женщина')
